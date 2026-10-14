@@ -1,6 +1,6 @@
 # Home Day Planner 🌈
 
-A colourful after-school day planner for Shanvi. It shows what is happening now and what is coming next, lets her tick off each activity, and celebrates when the whole day is done.
+A colourful after-school day planner for kids. It shows what is happening now and what is coming next, lets them tick off each activity, and celebrates when the whole day is done.
 
 **Live app:** https://swaroopnathgithub.github.io/Home_Day_Planner/
 
