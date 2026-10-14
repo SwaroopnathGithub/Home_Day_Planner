@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shanvi's Day Plan 🌈</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌈</text></svg>">
+<meta name="theme-color" content="#FFD400">
+<style>
+  /* ============================================================
+     COLOR PALETTE — one bright pastel color per activity category.
+     Change these to re-theme the whole app.
+  ============================================================ */
+  :root{
+    --c-home:     #FFE08A;   /* bag unpack, wake up */
+    --c-food:     #FFB5C0;   /* snack, meals */
+    --c-play:     #B7F0AD;   /* outdoor / free play */
+    --c-homework: #A8D8FF;   /* homework / reading */
+    --c-screen:   #FFC08A;   /* screen time */
+    --c-creative: #E3BBFF;   /* art, craft, games */
+    --c-bath:     #9FEAD1;   /* bath time */
+    --c-bedtime:  #C9C9F5;   /* story + bedtime */
+    --c-class:    #FF9AA2;   /* chess / extra classes */
+    --ink:        #3a3a4a;
+    --paper:      #FFFDF7;
+    --shadow:     rgba(0,0,0,0.12);
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    font-family: 'Comic Sans MS', 'Trebuchet MS', 'Segoe UI', sans-serif;
+    background: linear-gradient(160deg,#FFF6E5,#EAF7FF 60%,#F1FFEF);
+    color: var(--ink);
+    min-height:100vh;
+    padding-bottom: 40px;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    text-align:center;
+    padding: 18px 12px 10px;
+  }
+  header h1{
+    font-size: clamp(28px, 6vw, 44px);
+    margin: 0 0 4px;
+  }
+  .today-date{ font-size:17px; opacity:.75; margin-bottom:12px; }
+  .top-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+  }
+  button{
+    font-family: inherit;
+    cursor:pointer;
+    border:none;
+    border-radius: 18px;
+    font-weight:bold;
+    box-shadow: 0 4px 0 var(--shadow);
+  }
+  button:active{ transform: translateY(3px); box-shadow: 0 1px 0 var(--shadow); }
+
+  .btn-big{
+    font-size: 20px;
+    padding: 14px 26px;
+    background: #FFD400;
+    color:#3a3a4a;
+  }
+  .btn-small{
+    font-size:16px;
+    padding:10px 18px;
+    background:#fff;
+    border:2px solid #ddd;
+  }
+  .btn-small.active{ background:#3a3a4a; color:#fff; }
+
+  /* ---------- DAY TABS ---------- */
+  nav.day-tabs{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin: 18px auto 10px;
+    max-width: 900px;
+    padding: 0 12px;
+  }
+  nav.day-tabs button{
+    font-size: 17px;
+    padding: 12px 16px;
+    background:#fff;
+    border: 3px solid #fff;
+  }
+  nav.day-tabs button.selected{
+    border-color:#3a3a4a;
+    background:#3a3a4a;
+    color:#fff;
+  }
+
+  main{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 14px;
+  }
+
+  /* ---------- NOW / NEXT CARDS ---------- */
+  .now-next-wrap{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    margin: 14px 0;
+  }
+  .now-next-card{
+    flex: 1 1 260px;
+    border-radius: 24px;
+    padding: 18px 20px;
+    box-shadow: 0 6px 0 var(--shadow);
+  }
+  .now-next-card h2{
+    margin:0 0 6px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity:.7;
+  }
+  .now-next-card .big-emoji{ font-size: 46px; }
+  .now-next-card .name{ font-size: 24px; font-weight:bold; margin: 4px 0; }
+  .now-next-card .time{ font-size: 16px; opacity:.75; }
+  .card-now{ background: #FFF3B0; border: 3px solid #FFD400; }
+  .card-next{ background: #E8F7FF; border: 3px solid #A8D8FF; }
+  .countdown{
+    margin-top:6px;
+    font-size:15px;
+    font-weight:bold;
+    color:#b34700;
+  }
+
+  /* ---------- PROGRESS BAR ---------- */
+  .progress-wrap{
+    margin: 6px 0 18px;
+  }
+  .progress-label{ font-size:15px; margin-bottom:6px; font-weight:bold; }
+  .progress-track{
+    background:#eee;
+    border-radius: 20px;
+    height: 22px;
+    overflow:hidden;
+    border: 2px solid #ddd;
+  }
+  .progress-fill{
+    height:100%;
+    background: linear-gradient(90deg,#8CE99A,#69DB7C);
+    transition: width .4s ease;
+  }
+
+  /* ---------- SCHEDULE LIST ---------- */
+  ul.schedule{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  li.block{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    border-radius: 20px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.08);
+    border: 3px solid transparent;
+  }
+  li.block .emoji{ font-size: 34px; flex-shrink:0; }
+  li.block .info{ flex:1; min-width:0; }
+  li.block .info .activity-name{ font-size:20px; font-weight:bold; }
+  li.block .info .time-range{ font-size:14px; opacity:.75; }
+  li.block .badge{
+    font-size:12px;
+    background:rgba(255,255,255,0.7);
+    border-radius:10px;
+    padding:2px 8px;
+    margin-left:6px;
+  }
+  li.block.done{ opacity:.55; }
+  li.block.done .activity-name{ text-decoration: line-through; }
+  li.block.current{
+    border-color:#3a3a4a;
+    transform: scale(1.02);
+  }
+
+  .check-btn{
+    width:44px; height:44px;
+    border-radius:50%;
+    font-size:22px;
+    background:#fff;
+    border:3px solid #ccc;
+    flex-shrink:0;
+  }
+  .check-btn.checked{ background:#69DB7C; border-color:#2f9e44; color:#fff; }
+
+  .edit-controls{ display:flex; gap:6px; }
+  .icon-btn{
+    background:#fff;
+    border:2px solid #ddd;
+    border-radius:12px;
+    font-size:18px;
+    padding:6px 10px;
+  }
+
+  /* category background colors */
+  .cat-home{ background: var(--c-home); }
+  .cat-food{ background: var(--c-food); }
+  .cat-play{ background: var(--c-play); }
+  .cat-homework{ background: var(--c-homework); }
+  .cat-screen{ background: var(--c-screen); }
+  .cat-creative{ background: var(--c-creative); }
+  .cat-bath{ background: var(--c-bath); }
+  .cat-bedtime{ background: var(--c-bedtime); }
+  .cat-class{ background: var(--c-class); }
+
+  /* ---------- ADD BUTTON + FORM ---------- */
+  .add-block-btn{
+    margin-top: 16px;
+    width:100%;
+    padding:16px;
+    font-size:18px;
+    background:#fff;
+    border:3px dashed #bbb;
+    border-radius:20px;
+    color:#555;
+  }
+
+  .edit-form{
+    margin-top:16px;
+    background:#fff;
+    border-radius:22px;
+    padding:18px;
+    border:3px solid #A8D8FF;
+    display:none;
+  }
+  .edit-form.open{ display:block; }
+  .edit-form h3{ margin-top:0; }
+  .edit-form label{
+    display:block;
+    font-size:14px;
+    font-weight:bold;
+    margin: 10px 0 4px;
+  }
+  .edit-form input, .edit-form select{
+    width:100%;
+    font-size:16px;
+    padding:10px;
+    border-radius:12px;
+    border:2px solid #ddd;
+    font-family:inherit;
+  }
+  .emoji-picks{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .emoji-picks button{
+    font-size:20px;
+    padding:6px 10px;
+    background:#f5f5f5;
+    border:2px solid #eee;
+  }
+  .form-actions{ display:flex; gap:10px; margin-top:16px; }
+  .form-actions button{ flex:1; padding:12px; font-size:16px; }
+  .btn-save{ background:#69DB7C; }
+  .btn-cancel{ background:#eee; }
+  .btn-delete{ background:#FF8787; color:#fff; }
+
+  /* ---------- WEEK OVERVIEW ---------- */
+  #weekOverview{ display:none; margin-top:10px; }
+  #weekOverview.open{ display:block; }
+  .week-grid{
+    display:flex;
+    gap:12px;
+    overflow-x:auto;
+    padding-bottom: 10px;
+  }
+  .week-col{
+    flex: 0 0 200px;
+    background:#fff;
+    border-radius:18px;
+    padding:12px;
+    border:2px solid #eee;
+  }
+  .week-col h3{ margin:0 0 8px; font-size:16px; }
+  .week-col .mini-block{
+    font-size:12px;
+    padding:6px 8px;
+    border-radius:10px;
+    margin-bottom:6px;
+  }
+
+  /* ---------- CELEBRATION ---------- */
+  #celebration{
+    position:fixed; inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,0.85);
+    z-index:999;
+    text-align:center;
+    flex-direction:column;
+  }
+  #celebration.show{ display:flex; }
+  #celebration .big{ font-size:70px; }
+  #celebration .msg{ font-size:28px; font-weight:bold; margin-top:10px; }
+  .confetti{
+    position:absolute;
+    top:-20px;
+    font-size:26px;
+    animation: fall 2.6s linear forwards;
+  }
+  @keyframes fall{
+    to{ transform: translateY(110vh) rotate(360deg); opacity: .9; }
+  }
+
+  footer{
+    text-align:center;
+    font-size:13px;
+    opacity:.6;
+    margin-top:30px;
+  }
+
+  /* ---------- PRINT VIEW ---------- */
+  @media print{
+    header .top-buttons, nav.day-tabs, .now-next-wrap, .progress-wrap,
+    .edit-controls, .check-btn, .add-block-btn, .edit-form, footer{
+      display:none !important;
+    }
+    body{ background:#fff; }
+    li.block{ border:2px solid #ccc !important; box-shadow:none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌈 Shanvi's Day Plan</h1>
+  <div class="today-date" id="todayDate"></div>
+  <div class="top-buttons">
+    <button class="btn-big" id="todayBtn">🏠 Today</button>
+    <button class="btn-small" id="editToggleBtn">✏️ Parent Edit</button>
+    <button class="btn-small" id="weekToggleBtn">📅 Week Overview</button>
+    <button class="btn-small" id="printBtn">🖨️ Print</button>
+  </div>
+</header>
+
+<!-- Day of week tabs, filled in by JS -->
+<nav class="day-tabs" id="dayTabs"></nav>
+
+<main>
+
+  <!-- "What's now / what's next" cards, only shown when viewing today -->
+  <div class="now-next-wrap" id="nowNextWrap">
+    <div class="now-next-card card-now">
+      <h2>Happening Now</h2>
+      <div class="big-emoji" id="nowEmoji">✨</div>
+      <div class="name" id="nowName">All done for now!</div>
+      <div class="time" id="nowTime"></div>
+      <div class="countdown" id="nowCountdown"></div>
+    </div>
+    <div class="now-next-card card-next">
+      <h2>Coming Up Next</h2>
+      <div class="big-emoji" id="nextEmoji">🎉</div>
+      <div class="name" id="nextName">Nothing else today!</div>
+      <div class="time" id="nextTime"></div>
+    </div>
+  </div>
+
+  <!-- Progress bar, only shown for today -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label" id="progressLabel">0 of 0 done</div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <!-- The list of time blocks for the selected day -->
+  <ul class="schedule" id="scheduleList"></ul>
+
+  <!-- Button (edit mode only) to add a new activity -->
+  <button class="add-block-btn" id="addBlockBtn" style="display:none;">➕ Add an activity</button>
+
+  <!-- Add / Edit form (hidden until needed) -->
+  <div class="edit-form" id="editForm">
+    <h3 id="formTitle">Add Activity</h3>
+    <input type="hidden" id="formBlockId">
+
+    <label>Start time</label>
+    <input type="time" id="formStart">
+
+    <label>End time</label>
+    <input type="time" id="formEnd">
+
+    <label>Activity name</label>
+    <input type="text" id="formName" placeholder="e.g. Homework Time">
+
+    <label>Icon</label>
+    <input type="text" id="formEmoji" placeholder="e.g. 📖" maxlength="4">
+    <div class="emoji-picks">
+      <button type="button" data-emoji="🎒">🎒</button>
+      <button type="button" data-emoji="🍽️">🍽️</button>
+      <button type="button" data-emoji="🍳">🍳</button>
+      <button type="button" data-emoji="🍚">🍚</button>
+      <button type="button" data-emoji="📖">📖</button>
+      <button type="button" data-emoji="✏️">✏️</button>
+      <button type="button" data-emoji="🎨">🎨</button>
+      <button type="button" data-emoji="🏃">🏃</button>
+      <button type="button" data-emoji="🧸">🧸</button>
+      <button type="button" data-emoji="📺">📺</button>
+      <button type="button" data-emoji="🛁">🛁</button>
+      <button type="button" data-emoji="📚">📚</button>
+      <button type="button" data-emoji="😴">😴</button>
+      <button type="button" data-emoji="♟️">♟️</button>
+      <button type="button" data-emoji="🧩">🧩</button>
+      <button type="button" data-emoji="🌞">🌞</button>
+    </div>
+
+    <label>Category (controls the color)</label>
+    <select id="formCategory">
+      <option value="home">🏠 Home / Getting ready</option>
+      <option value="food">🍽️ Food</option>
+      <option value="play">🏃 Play</option>
+      <option value="homework">📖 Homework / Reading</option>
+      <option value="screen">📺 Screen time</option>
+      <option value="creative">🎨 Creative / Games</option>
+      <option value="bath">🛁 Bath</option>
+      <option value="bedtime">😴 Bedtime</option>
+      <option value="class">♟️ Extra class</option>
+    </select>
+
+    <div class="form-actions">
+      <button type="button" class="btn-save" id="formSaveBtn">💾 Save</button>
+      <button type="button" class="btn-cancel" id="formCancelBtn">Cancel</button>
+      <button type="button" class="btn-delete" id="formDeleteBtn" style="display:none;">🗑️ Delete</button>
+    </div>
+  </div>
+
+  <!-- Read-only week-at-a-glance for the parent -->
+  <div id="weekOverview">
+    <div class="week-grid" id="weekGrid"></div>
+  </div>
+
+</main>
+
+<footer>Made with ❤️ for Shanvi, for a great day, every day.</footer>
+
+<!-- Full-screen celebration overlay -->
+<div id="celebration">
+  <div class="big">🎉🎊🌟</div>
+  <div class="msg">Great job, Shanvi! You finished your whole day!</div>
+</div>
+
+<script>
+/* ================================================================
+   DATA MODEL
+   ----------------------------------------------------------------
+   schedule = {
+     monday:    [ {id, start, end, name, emoji, category}, ... ],
+     tuesday:   [ ... ],
+     ...
+     sunday:    [ ... ]
+   }
+   Times are stored as 24-hour "HH:MM" strings so they sort/compare
+   easily. Everything is saved to localStorage under STORAGE_KEY.
+================================================================ */
+
+const STORAGE_KEY = 'homeRoutineSchedule';
+const DONE_KEY = 'homeRoutineDoneMap';       // which blocks are checked off, per date
+const CELEBRATED_KEY = 'homeRoutineCelebratedDates';
+
+const DAY_KEYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+const DAY_LABELS = {
+  monday:'Mon', tuesday:'Tue', wednesday:'Wed', thursday:'Thu',
+  friday:'Fri', saturday:'Sat', sunday:'Sun'
+};
+const DAY_FULL = {
+  monday:'Monday', tuesday:'Tuesday', wednesday:'Wednesday', thursday:'Thursday',
+  friday:'Friday', saturday:'Saturday', sunday:'Sunday'
+};
+
+let blockIdCounter = 1;
+function newBlockId(){ return 'b' + (blockIdCounter++); }
+
+// After loading a saved schedule, continue numbering past the highest saved id
+// so newly added activities never reuse an existing id.
+function syncBlockIdCounter(sched){
+  let max = 0;
+  Object.values(sched).forEach(list => (list || []).forEach(b => {
+    const n = parseInt(String(b.id).replace(/^b/, ''), 10);
+    if(!isNaN(n) && n > max) max = n;
+  }));
+  blockIdCounter = Math.max(blockIdCounter, max + 1);
+}
+
+function makeBlock(start, end, name, emoji, category){
+  return { id: newBlockId(), start, end, name, emoji, category };
+}
+
+// A normal weekday evening (no extra class)
+function weekdayTemplate(){
+  return [
+    makeBlock('15:30','15:45','Unpack School Bag','🎒','home'),
+    makeBlock('15:45','16:15','Snack Time','🍽️','food'),
+    makeBlock('16:15','17:00','Outdoor Play','🏃','play'),
+    makeBlock('17:00','17:30','Screen Time','📺','screen'),
+    makeBlock('17:30','18:15','Homework Time','📖','homework'),
+    makeBlock('18:15','18:45','Drawing & Craft','🎨','creative'),
+    makeBlock('18:45','19:15','Dinner','🍚','food'),
+    makeBlock('19:15','19:45','Bath Time','🛁','bath'),
+    makeBlock('19:45','20:15','Reading / Revision','📖','homework'),
+    makeBlock('20:15','20:45','Story Time','📚','bedtime'),
+    makeBlock('20:45','21:00','Bedtime','😴','bedtime'),
+  ];
+}
+
+// Monday & Wednesday evening — includes 5-6pm Chess class
+function chessDayTemplate(){
+  return [
+    makeBlock('15:30','15:45','Unpack School Bag','🎒','home'),
+    makeBlock('15:45','16:15','Snack Time','🍽️','food'),
+    makeBlock('16:15','17:00','Outdoor Play','🏃','play'),
+    makeBlock('17:00','18:00','Chess Class','♟️','class'),
+    makeBlock('18:00','18:30','Homework Time','📖','homework'),
+    makeBlock('18:30','18:45','Screen Time','📺','screen'),
+    makeBlock('18:45','19:15','Dinner','🍚','food'),
+    makeBlock('19:15','19:45','Bath Time','🛁','bath'),
+    makeBlock('19:45','20:20','Story Time','📚','bedtime'),
+    makeBlock('20:20','21:00','Bedtime','😴','bedtime'),
+  ];
+}
+
+// Full-day weekend / holiday template
+function weekendTemplate(){
+  return [
+    makeBlock('07:00','07:30','Wake Up & Freshen Up','🌞','home'),
+    makeBlock('07:30','08:00','Breakfast','🍳','food'),
+    makeBlock('08:00','09:00','Screen Time','📺','screen'),
+    makeBlock('09:00','10:00','Drawing & Craft','🎨','creative'),
+    makeBlock('10:00','11:00','Outdoor Play / Park','🏃','play'),
+    makeBlock('11:00','12:00','Free Play','🧸','play'),
+    makeBlock('12:00','12:45','Lunch','🍚','food'),
+    makeBlock('12:45','13:30','Rest / Nap Time','😴','bedtime'),
+    makeBlock('13:30','14:15','Reading Time','📖','homework'),
+    makeBlock('14:15','15:30','Outdoor Play','🏃','play'),
+    makeBlock('15:30','16:00','Snack Time','🍽️','food'),
+    makeBlock('16:00','17:00','Hobby / Craft Time','🎨','creative'),
+    makeBlock('17:00','18:00','Family Game Time','🧩','creative'),
+    makeBlock('18:00','18:30','Dinner','🍚','food'),
+    makeBlock('18:30','19:00','Bath Time','🛁','bath'),
+    makeBlock('19:00','19:30','Story Time','📚','bedtime'),
+    makeBlock('19:30','20:00','Quiet Wind Down','🧸','bedtime'),
+    makeBlock('20:00','21:00','Bedtime','😴','bedtime'),
+  ];
+}
+
+function buildDefaultSchedule(){
+  return {
+    monday: chessDayTemplate(),
+    tuesday: weekdayTemplate(),
+    wednesday: chessDayTemplate(),
+    thursday: weekdayTemplate(),
+    friday: weekdayTemplate(),
+    saturday: weekendTemplate(),
+    sunday: weekendTemplate(),
+  };
+}
+
+/* ---------------- Load / Save ---------------- */
+
+function loadSchedule(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const saved = JSON.parse(raw);
+      DAY_KEYS.forEach(k => { if(!Array.isArray(saved[k])) saved[k] = []; });
+      syncBlockIdCounter(saved);
+      return saved;
+    }
+  }catch(e){ console.warn('Could not read saved schedule, using defaults.', e); }
+  const def = buildDefaultSchedule();
+  saveSchedule(def);
+  return def;
+}
+function saveSchedule(schedule){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(schedule));
+}
+
+function loadDoneMap(){
+  try{
+    const raw = localStorage.getItem(DONE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {}; // { "2026-09-17": { blockId: true, ... }, ... }
+}
+function saveDoneMap(map){ localStorage.setItem(DONE_KEY, JSON.stringify(map)); }
+
+function loadCelebratedDates(){
+  try{
+    const raw = localStorage.getItem(CELEBRATED_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return [];
+}
+function saveCelebratedDates(list){ localStorage.setItem(CELEBRATED_KEY, JSON.stringify(list)); }
+
+/* ---------------- App State ---------------- */
+
+let schedule = loadSchedule();
+let doneMap = loadDoneMap();
+let celebratedDates = loadCelebratedDates();
+let editMode = false;
+let selectedDay = getTodayKey();
+
+function getTodayKey(){
+  // JS getDay(): 0=Sunday..6=Saturday
+  const jsDay = new Date().getDay();
+  const map = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+  return map[jsDay];
+}
+function getTodayDateStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function nowHM(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+/* ================================================================
+   RENDERING
+================================================================ */
+
+function renderDayTabs(){
+  const nav = document.getElementById('dayTabs');
+  nav.innerHTML = '';
+  DAY_KEYS.forEach(key=>{
+    const btn = document.createElement('button');
+    btn.textContent = DAY_LABELS[key];
+    if(key === selectedDay) btn.classList.add('selected');
+    btn.addEventListener('click', ()=>{ selectedDay = key; closeForm(); renderAll(); });
+    nav.appendChild(btn);
+  });
+}
+
+function renderNowNext(){
+  const isToday = selectedDay === getTodayKey();
+  document.getElementById('nowNextWrap').style.display = isToday ? 'flex' : 'none';
+  document.getElementById('progressWrap').style.display = isToday ? 'block' : 'none';
+  if(!isToday) return;
+
+  const blocks = schedule[selectedDay];
+  const t = nowHM();
+  const current = blocks.find(b => t >= b.start && t < b.end);
+  const upcoming = blocks.filter(b => b.start > t).sort((a,b)=> a.start.localeCompare(b.start))[0];
+
+  if(current){
+    document.getElementById('nowEmoji').textContent = current.emoji;
+    document.getElementById('nowName').textContent = current.name;
+    document.getElementById('nowTime').textContent = formatRange(current.start, current.end);
+    if(current.category === 'screen'){
+      const mins = minutesUntil(current.end);
+      document.getElementById('nowCountdown').textContent = mins > 0 ? ('⏳ ' + mins + ' min of screen time left') : '⏰ Screen time is over!';
+    } else {
+      document.getElementById('nowCountdown').textContent = '';
+    }
+  } else {
+    document.getElementById('nowEmoji').textContent = '✨';
+    document.getElementById('nowName').textContent = 'Free time!';
+    document.getElementById('nowTime').textContent = '';
+    document.getElementById('nowCountdown').textContent = '';
+  }
+
+  if(upcoming){
+    document.getElementById('nextEmoji').textContent = upcoming.emoji;
+    document.getElementById('nextName').textContent = upcoming.name;
+    document.getElementById('nextTime').textContent = formatRange(upcoming.start, upcoming.end);
+  } else {
+    document.getElementById('nextEmoji').textContent = '🎉';
+    document.getElementById('nextName').textContent = 'Nothing else today!';
+    document.getElementById('nextTime').textContent = '';
+  }
+}
+
+function minutesUntil(hm){
+  const [h,m] = hm.split(':').map(Number);
+  const target = new Date();
+  target.setHours(h, m, 0, 0);
+  const diffMs = target - new Date();
+  return Math.max(0, Math.round(diffMs/60000));
+}
+
+function formatRange(start, end){
+  return formatTime(start) + ' – ' + formatTime(end);
+}
+function formatTime(hm){
+  let [h,m] = hm.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12; if(h === 0) h = 12;
+  return h + ':' + String(m).padStart(2,'0') + ' ' + ampm;
+}
+
+function renderProgress(){
+  const isToday = selectedDay === getTodayKey();
+  if(!isToday) return;
+  const blocks = schedule[selectedDay];
+  const dateStr = getTodayDateStr();
+  const doneForToday = doneMap[dateStr] || {};
+  const doneCount = blocks.filter(b => doneForToday[b.id]).length;
+  const pct = blocks.length ? Math.round((doneCount/blocks.length)*100) : 0;
+  document.getElementById('progressLabel').textContent = doneCount + ' of ' + blocks.length + ' done';
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  if(doneCount === blocks.length && blocks.length > 0){
+    maybeCelebrate(dateStr);
+  }
+}
+
+function renderScheduleList(){
+  const ul = document.getElementById('scheduleList');
+  ul.innerHTML = '';
+  const blocks = schedule[selectedDay].slice().sort((a,b)=> a.start.localeCompare(b.start));
+  const isToday = selectedDay === getTodayKey();
+  const t = nowHM();
+  const dateStr = getTodayDateStr();
+  const doneForToday = doneMap[dateStr] || {};
+
+  blocks.forEach(b=>{
+    const li = document.createElement('li');
+    li.className = 'block cat-' + b.category;
+    if(isToday && t >= b.start && t < b.end) li.classList.add('current');
+    if(isToday && doneForToday[b.id]) li.classList.add('done');
+
+    // Checkbox — only meaningful for today's plan
+    if(isToday){
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'check-btn' + (doneForToday[b.id] ? ' checked' : '');
+      checkBtn.textContent = doneForToday[b.id] ? '✔' : '';
+      checkBtn.title = 'Mark done';
+      checkBtn.addEventListener('click', ()=> toggleDone(b.id));
+      li.appendChild(checkBtn);
+    }
+
+    const emoji = document.createElement('div');
+    emoji.className = 'emoji';
+    emoji.textContent = b.emoji;
+    li.appendChild(emoji);
+
+    const info = document.createElement('div');
+    info.className = 'info';
+    const nameEl = document.createElement('div');
+    nameEl.className = 'activity-name';
+    nameEl.textContent = b.name;
+    if(b.category === 'screen'){
+      const badge = document.createElement('span');
+      badge.className = 'badge';
+      badge.textContent = '⏱️ ' + diffMinutes(b.start,b.end) + ' min';
+      nameEl.appendChild(badge);
+    }
+    if(b.category === 'homework'){
+      const badge = document.createElement('span');
+      badge.className = 'badge';
+      badge.textContent = '⭐ important';
+      nameEl.appendChild(badge);
+    }
+    const timeEl = document.createElement('div');
+    timeEl.className = 'time-range';
+    timeEl.textContent = formatRange(b.start, b.end);
+    info.appendChild(nameEl);
+    info.appendChild(timeEl);
+    li.appendChild(info);
+
+    if(editMode){
+      const controls = document.createElement('div');
+      controls.className = 'edit-controls';
+      const editBtn = document.createElement('button');
+      editBtn.className = 'icon-btn';
+      editBtn.textContent = '✏️';
+      editBtn.addEventListener('click', ()=> openForm(b));
+      controls.appendChild(editBtn);
+      li.appendChild(controls);
+    }
+
+    ul.appendChild(li);
+  });
+
+  document.getElementById('addBlockBtn').style.display = editMode ? 'block' : 'none';
+}
+
+function diffMinutes(start,end){
+  const [sh,sm] = start.split(':').map(Number);
+  const [eh,em] = end.split(':').map(Number);
+  return (eh*60+em) - (sh*60+sm);
+}
+
+function renderWeekOverview(){
+  const grid = document.getElementById('weekGrid');
+  grid.innerHTML = '';
+  DAY_KEYS.forEach(key=>{
+    const col = document.createElement('div');
+    col.className = 'week-col';
+    const h3 = document.createElement('h3');
+    h3.textContent = DAY_FULL[key];
+    col.appendChild(h3);
+    schedule[key].slice().sort((a,b)=>a.start.localeCompare(b.start)).forEach(b=>{
+      const mini = document.createElement('div');
+      mini.className = 'mini-block cat-' + b.category;
+      mini.textContent = b.emoji + ' ' + formatTime(b.start) + ' ' + b.name;
+      col.appendChild(mini);
+    });
+    grid.appendChild(col);
+  });
+}
+
+function renderDate(){
+  document.getElementById('todayDate').textContent = new Date().toLocaleDateString(undefined, {weekday:'long', day:'numeric', month:'long'});
+}
+
+function renderAll(){
+  renderDate();
+  renderDayTabs();
+  renderNowNext();
+  renderProgress();
+  renderScheduleList();
+  renderWeekOverview();
+}
+
+/* ================================================================
+   ACTIONS
+================================================================ */
+
+function toggleDone(blockId){
+  const dateStr = getTodayDateStr();
+  if(!doneMap[dateStr]) doneMap[dateStr] = {};
+  doneMap[dateStr][blockId] = !doneMap[dateStr][blockId];
+  saveDoneMap(doneMap);
+  renderProgress();
+  renderScheduleList();
+}
+
+function maybeCelebrate(dateStr){
+  if(celebratedDates.includes(dateStr)) return;
+  celebratedDates.push(dateStr);
+  saveCelebratedDates(celebratedDates);
+  showCelebration();
+}
+
+function showCelebration(){
+  const overlay = document.getElementById('celebration');
+  overlay.classList.add('show');
+
+  // a few floating confetti emoji
+  const emojis = ['🎉','🌟','🎈','✨','🎊'];
+  for(let i=0;i<18;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.animationDelay = (Math.random()*0.8)+'s';
+    overlay.appendChild(c);
+  }
+
+  playChime();
+
+  setTimeout(()=>{
+    overlay.classList.remove('show');
+    overlay.querySelectorAll('.confetti').forEach(el=>el.remove());
+  }, 3200);
+}
+
+// A tiny synthesized "ta-da" chime — no external sound file needed.
+function playChime(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [523.25, 659.25, 783.99, 1046.5]; // C5 E5 G5 C6
+    notes.forEach((freq, i)=>{
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, ctx.currentTime + i*0.15);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i*0.15 + 0.4);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(ctx.currentTime + i*0.15);
+      osc.stop(ctx.currentTime + i*0.15 + 0.4);
+    });
+  }catch(e){ /* audio not available — celebration still shows visually */ }
+}
+
+/* ---------------- Add / Edit Form ---------------- */
+
+function openForm(block){
+  const form = document.getElementById('editForm');
+  form.classList.add('open');
+  document.getElementById('formTitle').textContent = block ? 'Edit Activity' : 'Add Activity';
+  document.getElementById('formBlockId').value = block ? block.id : '';
+  document.getElementById('formStart').value = block ? block.start : '16:00';
+  document.getElementById('formEnd').value = block ? block.end : '16:30';
+  document.getElementById('formName').value = block ? block.name : '';
+  document.getElementById('formEmoji').value = block ? block.emoji : '⭐';
+  document.getElementById('formCategory').value = block ? block.category : 'play';
+  document.getElementById('formDeleteBtn').style.display = block ? 'block' : 'none';
+  form.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function closeForm(){
+  document.getElementById('editForm').classList.remove('open');
+}
+
+function saveForm(){
+  const id = document.getElementById('formBlockId').value;
+  const start = document.getElementById('formStart').value;
+  const end = document.getElementById('formEnd').value;
+  const name = document.getElementById('formName').value.trim();
+  const emoji = document.getElementById('formEmoji').value.trim() || '⭐';
+  const category = document.getElementById('formCategory').value;
+
+  if(!start || !end || !name){
+    alert('Please fill in start time, end time, and activity name.');
+    return;
+  }
+  if(end <= start){
+    alert('End time must be after start time.');
+    return;
+  }
+
+  const blocks = schedule[selectedDay];
+  if(id){
+    const existing = blocks.find(b=>b.id === id);
+    Object.assign(existing, {start,end,name,emoji,category});
+  } else {
+    blocks.push(makeBlock(start,end,name,emoji,category));
+  }
+  saveSchedule(schedule);
+  closeForm();
+  renderAll();
+}
+
+function deleteCurrentBlock(){
+  const id = document.getElementById('formBlockId').value;
+  if(!id) return;
+  if(!confirm('Delete this activity?')) return;
+  schedule[selectedDay] = schedule[selectedDay].filter(b=>b.id !== id);
+  saveSchedule(schedule);
+  closeForm();
+  renderAll();
+}
+
+/* ================================================================
+   EVENT WIRING
+================================================================ */
+
+document.getElementById('todayBtn').addEventListener('click', ()=>{
+  selectedDay = getTodayKey();
+  closeForm();
+  renderAll();
+});
+
+document.getElementById('editToggleBtn').addEventListener('click', (e)=>{
+  editMode = !editMode;
+  e.target.classList.toggle('active', editMode);
+  closeForm();
+  renderAll();
+});
+
+document.getElementById('weekToggleBtn').addEventListener('click', (e)=>{
+  const wrap = document.getElementById('weekOverview');
+  wrap.classList.toggle('open');
+  e.target.classList.toggle('active', wrap.classList.contains('open'));
+});
+
+document.getElementById('printBtn').addEventListener('click', ()=> window.print());
+
+document.getElementById('addBlockBtn').addEventListener('click', ()=> openForm(null));
+document.getElementById('formSaveBtn').addEventListener('click', saveForm);
+document.getElementById('formCancelBtn').addEventListener('click', closeForm);
+document.getElementById('formDeleteBtn').addEventListener('click', deleteCurrentBlock);
+
+document.querySelectorAll('.emoji-picks button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.getElementById('formEmoji').value = btn.dataset.emoji;
+  });
+});
+
+/* ================================================================
+   INIT
+================================================================ */
+
+renderAll();
+
+// Refresh the "now / next" highlight and progress every 30 seconds,
+// so the app stays accurate without needing a page reload.
+setInterval(()=>{
+  renderDate();
+  renderNowNext();
+  renderProgress();
+  renderScheduleList();
+}, 30000);
+
+</script>
+</body>
+</html>
